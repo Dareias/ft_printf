@@ -6,7 +6,7 @@
 /*   By: fillip <fillip@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 00:50:19 by fillip            #+#    #+#             */
-/*   Updated: 2025/06/04 04:51:12 by fillip           ###   ########.fr       */
+/*   Updated: 2025/06/09 15:17:05 by fillip           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,6 @@ n - number of characters stored to int pointed to by argument
 m - glibc, errno output
 */
 
-typedef struct s_spec
-{
-	char	spec;
-	int (*printer)(va_list, t_format *);
-}	t_spec;
-
 static const t_spec g_spec[] = 
 {
 	{'c', print_char},
@@ -58,6 +52,19 @@ static const t_spec g_spec[] =
 	{0, NULL}
 };
 
+const t_spec	*find_spec(char c)
+{
+	int	i;
+
+	i = 0;
+	while (g_spec[i].printer != NULL)
+	{
+		if (g_spec[i].spec == c)
+			return &g_spec[i];
+		i++;
+	}
+}
+
 int	ft_printf(const char *restrict format, ...)
 {
 	va_list	args;
@@ -67,13 +74,13 @@ int	ft_printf(const char *restrict format, ...)
 	printed = 0;
 	while (*format)
 	{
-		if (*format == '%')
+		if (*format == '%')	//can be put into init helper func
 		{
 			format++;
 			t_format f = {0};
-			parse_flags
-			parse_width
-			parse_prec
+			parse_flags();
+			parse_width();
+			parse_prec();
 			const t_spec *spec = find_spec(*format);
 			if (spec)
 				printed += spec->printer(args, &f);
